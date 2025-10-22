@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Моя лента - Социальная сеть</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Social Network</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" th:href="@{/}">Главная</a>
+            <a class="nav-link" th:href="@{/posts}">Посты</a>
+            <a class="nav-link" th:href="@{/users}">Пользователи</a>
+            <th:block th:if="${session.currentUser != null}">
+                <a class="nav-link active" th:href="@{/feed}">Моя лента</a>
+                <a class="nav-link" th:href="@{/posts/create}">Создать пост</a>
+                <a class="nav-link" th:href="@{/users/profile}">Мой профиль</a>
+                <span class="navbar-text mx-2" th:text="${session.currentUser.username}">User</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Выйти</button>
+                </form>
+            </th:block>
+            <th:block th:unless="${session.currentUser != null}">
+                <a class="nav-link" th:href="@{/login}">Войти</a>
+                <a class="nav-link" th:href="@{/register}">Регистрация</a>
+            </th:block>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <!-- Flash сообщения -->
+    <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <h2>Моя лента</h2>
+    <p class="text-muted">Последние посты пользователей, на которых вы подписаны</p>
+
+    <div th:if="${feed != null and !feed.isEmpty()}">
+        <div th:each="item : ${feed}" class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="card-title" th:text="${item.title != null ? item.title : 'Без названия'}">
+                            Заголовок поста
+                        </h5>
+                        <p class="card-text" th:text="${item.content}">Содержание поста...</p>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">
+                            Автор:
+                            <a th:href="@{/users/{id}(id=${item.authorId})}"
+                               th:text="${item.authorUsername}">author</a>
+                        </small>
+                        <br>
+                        <small class="text-muted">
+                            Опубликовано:
+                            <span th:if="${item.postCreatedAt != null}"
+                                  th:text="${#temporals.format(item.postCreatedAt, 'dd.MM.yyyy HH:mm')}">
+                                дата
+                            </span>
+                            <span th:unless="${item.postCreatedAt != null}">неизвестно</span>
+                        </small>
+                    </div>
+
+                    <div class="text-end">
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                ❤️ Лайков: <span th:text="${item.likesCount != null ? item.likesCount : 0}">0</span>
+                            </small>
+                            <th:block th:if="${item.commentsCount != null}">
+                                <small class="text-muted ms-2">
+                                    💬 Комментариев: <span th:text="${item.commentsCount}">0</span>
+                                </small>
+                            </th:block>
+                        </div>
+                        <a th:href="@{/posts/{id}(id=${item.postId})}"
+                           class="btn btn-sm btn-outline-primary">
+                            Читать полностью
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${feed == null or feed.isEmpty()}" class="text-center py-5">
+        <h4 class="text-muted">Лента пуста</h4>
+        <p class="text-muted">
+            Подпишитесь на других пользователей, чтобы видеть их посты здесь.
+            <br>
+            Или создайте свой первый пост!
+        </p>
+        <div class="mt-3">
+            <a th:href="@{/users}" class="btn btn-primary me-2">Найти пользователей</a>
+            <a th:href="@{/posts/create}" class="btn btn-outline-primary">Создать пост</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

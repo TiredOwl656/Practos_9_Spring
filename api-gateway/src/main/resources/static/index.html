@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Network - Главная</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Social Network</h1>
+        <nav id="nav">
+            <!-- Навигация будет заполнена через JavaScript -->
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <div id="auth-section">
+        <h2>Добро пожаловать в Social Network!</h2>
+        <p>Присоединяйтесь к нашему сообществу</p>
+        <div class="auth-buttons">
+            <button onclick="showLogin()" class="btn btn-primary">Войти</button>
+            <button onclick="showRegister()" class="btn btn-secondary">Зарегистрироваться</button>
+        </div>
+    </div>
+
+    <div id="feed-section" style="display: none;">
+        <h2>Ваша лента</h2>
+        <div id="feed-content">
+            <!-- Лента будет загружена через JavaScript -->
+        </div>
+    </div>
+</main>
+
+<!-- Модальные окна -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Вход в систему</h2>
+        <form id="login-form">
+            <input type="text" id="login-username" placeholder="Имя пользователя" required>
+            <input type="password" id="login-password" placeholder="Пароль" required>
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+    </div>
+</div>
+
+<div id="register-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Регистрация</h2>
+        <form id="register-form">
+            <input type="text" id="register-username" placeholder="Имя пользователя" required>
+            <input type="email" id="register-email" placeholder="Email" required>
+            <input type="password" id="register-password" placeholder="Пароль" required>
+            <input type="text" id="register-firstname" placeholder="Имя">
+            <input type="text" id="register-lastname" placeholder="Фамилия">
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

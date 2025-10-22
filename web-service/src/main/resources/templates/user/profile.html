@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Профиль пользователя</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Social Network</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" th:href="@{/}">Главная</a>
+            <a class="nav-link" th:href="@{/posts}">Посты</a>
+            <a class="nav-link" th:href="@{/users}">Пользователи</a>
+            <th:block th:if="${currentUser != null}">
+                <a class="nav-link" th:href="@{/feed}">Моя лента</a>
+                <a class="nav-link" th:href="@{/posts/create}">Создать пост</a>
+                <a class="nav-link" th:href="@{/users/profile}">Мой профиль</a>
+                <span class="navbar-text mx-2" th:text="${currentUser.username}">User</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Выйти</button>
+                </form>
+            </th:block>
+            <th:block th:unless="${currentUser != null}">
+                <a class="nav-link" th:href="@{/login}">Войти</a>
+                <a class="nav-link" th:href="@{/register}">Регистрация</a>
+            </th:block>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <!-- Flash сообщения -->
+    <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${user == null}" class="alert alert-warning">
+        Пользователь не найден
+    </div>
+
+    <div th:if="${user != null}" class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                             style="width: 100px; height: 100px; font-size: 2rem;">
+                            <span th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}">U</span>
+                        </div>
+                    </div>
+                    <h4 th:text="${user.username}">username</h4>
+                    <p class="text-muted" th:text="${user.email}">email@example.com</p>
+
+                    <div th:if="${user.firstName != null or user.lastName != null}">
+                        <p th:text="${(user.firstName != null ? user.firstName : '') + ' ' + (user.lastName != null ? user.lastName : '')}">Полное имя</p>
+                    </div>
+
+                    <!-- Кнопка подписки -->
+                    <div th:if="${currentUser != null and currentUser.id != user.id}">
+                        <div th:if="${isSubscribed}">
+                            <form th:action="@{/users/unfollow}" method="post" class="d-inline">
+                                <input type="hidden" name="followingId" th:value="${user.id}">
+                                <button type="submit" class="btn btn-outline-danger">Отписаться</button>
+                            </form>
+                        </div>
+                        <div th:unless="${isSubscribed}">
+                            <form th:action="@{/users/follow}" method="post" class="d-inline">
+                                <input type="hidden" name="followingId" th:value="${user.id}">
+                                <input type="hidden" name="followingUsername" th:value="${user.username}">
+                                <button type="submit" class="btn btn-primary">Подписаться</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a th:href="@{/users}" class="btn btn-sm btn-outline-secondary">← Назад к пользователям</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Посты пользователя</h3>
+
+            <div th:if="${posts != null and !posts.isEmpty()}">
+                <div th:each="post : ${posts}" class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${post.title != null ? post.title : 'Без названия'}">Заголовок поста</h5>
+                        <p class="card-text" th:text="${post.content != null ? post.content : 'Нет содержания'}">Содержание поста...</p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                Лайков: <span th:text="${post.likesCount != null ? post.likesCount : 0}">0</span>
+                                <!-- Временно закомментировано до добавления commentsCount в Post -->
+                                <!-- | Комментариев: <span th:text="${post.commentsCount != null ? post.commentsCount : 0}">0</span> -->
+                            </small>
+                            <small class="text-muted" th:if="${post.createdAt != null}">
+                                <span th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}">дата</span>
+                            </small>
+                            <div>
+                                <a th:href="@{/posts/{id}(id=${post.id})}"
+                                   class="btn btn-sm btn-outline-primary"
+                                   th:if="${post.id != null}">
+                                    Читать полностью
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${posts == null or posts.isEmpty()}" class="text-center py-5">
+                <h4 class="text-muted">Пользователь еще не опубликовал посты</h4>
+                <p class="text-muted">Когда пользователь создаст пост, он появится здесь</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

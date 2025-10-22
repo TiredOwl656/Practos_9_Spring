@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход - Social Network</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1><a href="/" style="color: white; text-decoration: none;">Social Network</a></h1>
+    <nav>
+      <a href="/">Главная</a>
+      <button onclick="showRegister()" class="btn btn-outline">Регистрация</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="auth-container">
+    <div class="auth-form">
+      <h2>Вход в систему</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Имя пользователя:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Пароль:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Войти</button>
+      </form>
+      <p class="auth-link">
+        Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрируйтесь</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- Модальное окно регистрации -->
+<div id="register-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Регистрация</h2>
+    <form id="register-form">
+      <div class="form-group">
+        <input type="text" id="register-username" placeholder="Имя пользователя" required>
+      </div>
+      <div class="form-group">
+        <input type="email" id="register-email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="register-password" placeholder="Пароль" required>
+      </div>
+      <div class="form-group">
+        <input type="text" id="register-firstname" placeholder="Имя">
+      </div>
+      <div class="form-group">
+        <input type="text" id="register-lastname" placeholder="Фамилия">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Если пользователь уже авторизован, перенаправляем на главную
+    if (authService.isAuthenticated()) {
+      window.location.href = '/';
+      return;
+    }
+
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const result = await authService.login(username, password);
+      if (result.success) {
+        alert('Успешный вход!');
+        window.location.href = '/';
+      } else {
+        alert('Ошибка: ' + result.message);
+      }
+    });
+  });
+
+  function showRegister() {
+    document.getElementById('register-modal').style.display = 'block';
+  }
+
+  // Закрытие модального окна
+  window.onclick = function(event) {
+    const modal = document.getElementById('register-modal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  document.querySelector('.close').onclick = function() {
+    document.getElementById('register-modal').style.display = 'none';
+  }
+</script>
+</body>
+</html>

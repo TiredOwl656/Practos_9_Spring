@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Social Network</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1><a href="/" style="color: white; text-decoration: none;">Social Network</a></h1>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/feed.html">Лента</a>
+            <button onclick="authService.logout()" class="btn btn-outline">Выйти</button>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h2>Профиль пользователя</h2>
+            <div id="profile-info">
+                <!-- Информация о пользователе будет загружена здесь -->
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-stats">
+                <h3>Статистика</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="followers-count">0</span>
+                        <span class="stat-label">Подписчиков</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="following-count">0</span>
+                        <span class="stat-label">Подписок</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="posts-count">0</span>
+                        <span class="stat-label">Постов</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <h3>Действия</h3>
+                <div class="actions-grid">
+                    <button onclick="showUserSearch()" class="btn btn-primary">
+                        Найти пользователей
+                    </button>
+                    <button onclick="showMyPosts()" class="btn btn-secondary">
+                        Мои посты
+                    </button>
+                    <button onclick="createNewPost()" class="btn btn-success">
+                        Создать пост
+                    </button>
+                </div>
+            </div>
+
+            <div class="user-posts">
+                <h3>Мои посты</h3>
+                <div id="user-posts-list">
+                    <!-- Посты пользователя будут здесь -->
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Модальное окно поиска пользователей -->
+<div id="search-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Поиск пользователей</h2>
+        <div class="form-group">
+            <input type="text" id="search-username" placeholder="Введите имя пользователя">
+            <button onclick="searchUsers()" class="btn btn-primary">Поиск</button>
+        </div>
+        <div id="search-results">
+            <!-- Результаты поиска будут здесь -->
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно создания поста -->
+<div id="create-post-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Создать пост</h2>
+        <form id="create-post-form">
+            <div class="form-group">
+                <input type="text" id="post-title" placeholder="Заголовок поста" required>
+            </div>
+            <div class="form-group">
+                <textarea id="post-content" placeholder="Содержание поста" rows="6" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Опубликовать</button>
+        </form>
+    </div>
+</div>
+
+<div id="edit-post-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Редактировать пост</h2>
+        <form id="edit-post-form">
+            <input type="hidden" id="edit-post-id">
+            <div class="form-group">
+                <label for="edit-post-title">Заголовок:</label>
+                <input type="text" id="edit-post-title" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-post-content">Содержание:</label>
+                <textarea id="edit-post-content" rows="6" required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                <button type="button" onclick="closeModal('edit-post-modal')" class="btn btn-outline">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/profile.js"></script>
+</body>
+</html>
