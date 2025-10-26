@@ -1,28 +1,27 @@
 server:
-  port: 8082
+  port: ${PORT:8082}
 
 spring:
   application:
     name: post-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/practos_9_proslushivanie_musiki
-    username: postgres
-    password: villem
+  datasource:  # Используйте env vars как выше
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/practos_9_proslushivanie_musiki}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:villem}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update  # Измените на update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
 
-# Eureka Configuration - ДОЛЖЕН БЫТЬ!
 eureka:
   client:
     service-url:
-      defaultZone: http://admin:password@localhost:8761/eureka/
+      defaultZone: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:password}@${EUREKA_HOST:eureka-server}:${EUREKA_PORT:8761}/eureka/
 
 management:
   endpoints:
@@ -32,5 +31,5 @@ management:
 
 logging:
   level:
-    com.blogapp: DEBUG
-    org.hibernate.SQL: DEBUG
+    com.blogapp: ${LOGGING_LEVEL_COM_BLOGAPP:INFO}
+    org.hibernate.SQL: ${LOGGING_LEVEL_ORG_HIBERNATE_SQL:INFO}

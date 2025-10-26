@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/practos_9_proslushivanie_musiki
-    username: postgres
-    password: villem
+    url: ${DB_URL:jdbc:postgresql://pr_9_render_user:ZQ6Xb4JOZYo0mRm6cvdNx80plhI5M4vd@dpg-d3v11lur433s73ci6bfg-a.oregon-postgres.render.com/pr_9_render}
+    username: ${DB_USERNAME:pr_9_render_user}
+    password: ${DB_PASSWORD:ZQ6Xb4JOZYo0mRm6cvdNx80plhI5M4vd}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
